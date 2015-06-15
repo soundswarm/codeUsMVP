@@ -1,0 +1,53 @@
+body {
+  margin-left: 10px;
+}
+
+.error {
+  color: red;
+  font-size: 20px;
+}
+
+.form-inline {
+  margin-bottom: 40px;
+  padding-left: 28px
+}
+.img-responsive {
+  height: 34px;
+  width: 34px;
+  display: initial;
+  margin-left: 10px;
+}
+.list-group-item {
+  padding: 1px;
+  border: none;
+}
+
+.panel {
+  height: 160px;
+  overflow-y: auto;
+}
+
+.panel-heading {
+  font: 100px;
+}
+
+.signIn {
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  text-align: center;
+}
+.button-block, .signIn {
+  width: 200px;
+}
+
+.reposLanguages {
+  padding-left: 28px;
+}
+
+.totalLanguages {
+  width: 175px;
+}
+
+

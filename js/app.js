@@ -34,14 +34,17 @@ $('document').ready(function() {
 
       //get array of repo objects from github
       var getRepos = function (authRepoUrl){
-        return $.ajax({
+        return new Promise(function(resolve, reject) {
+          $.ajax({
           url: authRepoUrl,
           type: 'GET',
-          data: {'sort': 'updated', 'per_page': 100},
-        });
+          data: {'sort': 'updated', 'per_page': 10},
+          success: function(result) {
+            return resolve(result);
+          }
+        })});
       };
 
-      // get the bytes of code of the languages in each repo
       var getReposLanguages = function(repos) {
         return Promise.all(repos.map(function(repo) {
           return $.ajax({
@@ -55,6 +58,20 @@ $('document').ready(function() {
           return repos;
         })
       };
+      // get the bytes of code of the languages in each repo
+      // var getReposLanguages = function(repos) {
+      //   return Promise.all(repos.map(function(repo) {
+      //     return $.ajax({
+      //       url: repo.languages_url+tokenUrl,
+      //       type: 'GET'
+      //     })
+      //   })).then(function(languages) {
+      //     for(var i = 0; i<repos.length; i++) {
+      //       repos[i].languages = languages[i];
+      //     };
+      //     return repos;
+      //   })
+      // };
 
       getRepos(authRepoUrl).then(getReposLanguages).then(function(output) {
         console.log(output);

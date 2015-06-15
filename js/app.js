@@ -30,8 +30,38 @@ $('document').ready(function() {
       var tokenUrl ='?access_token='+access_token;
       var userUrl = apiUrl+'/user'+tokenUrl;
       var authRepoUrl = apiUrl+'/user/repos'+tokenUrl;
-      var authAddUserUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
+      var authOrgUrl = apiUrl+'/user/orgs'+tokenUrl;
+      console.log(tokenUrl)
+      // var authAddUserUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
+      // var authCommitsUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
 
+
+      var getOrgs = function(authOrgUrl) {
+        //returns array of org objects
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+          url: authOrgUrl,
+          type: 'GET',
+          // data: {'sort': 'updated', 'per_page': 10},
+          success: function(result) {
+            return resolve(result);
+          }
+        })});
+      };
+      getMembers = function(orgName) {
+          $.ajax({
+          url: apiUrl+'/orgs'+orgName+'/members',
+          type: 'GET',
+          // data: {'sort': 'updated', 'per_page': 10},
+          success: function(result) {
+
+            return resolve(result);
+          }
+        })});
+      }
+      getOrgs(authOrgUrl).then(function(output) {
+        console.log(output);
+      })
       //get array of repo objects from github
       var getRepos = function (authRepoUrl){
         return new Promise(function(resolve, reject) {
@@ -45,6 +75,20 @@ $('document').ready(function() {
         })});
       };
 
+      // var getReposCommits = function(repos) {
+      //   // /repos/:owner/:repo/stats/contributors
+      //   var owner = repo.owner.login;
+      //   var repoName = repo.name;
+      //   $.ajax({
+      //     url: authRepoUrl
+      //     // url: apiUrl+'/'+'repos/'+owner+'/'+repoName+'/'+'stats/contributors',
+      //     type: 'GET',
+      //     data: {'sort': 'updated', 'per_page': 10},
+      //     success: function(result) {
+      //       return console.log(result);
+      //     }
+      //   })
+      // };
       var getReposLanguages = function(repos) {
         return Promise.all(repos.map(function(repo) {
           return $.ajax({
@@ -73,9 +117,9 @@ $('document').ready(function() {
       //   })
       // };
 
-      getRepos(authRepoUrl).then(getReposLanguages).then(function(output) {
-        console.log(output);
-      });
+      // getRepos(authRepoUrl).then(getReposLanguages).then(function(output) {
+      //   console.log(output);
+      // });
 
     });
   };

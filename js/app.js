@@ -35,7 +35,12 @@ $('document').ready(function() {
       // var authAddUserUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
       // var authCommitsUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
 
+      //get orgs then display on page
+      //on org click,  
+      // get org members -> array
 
+      // get members' repos. promise all
+      // get repos langs. promise all
       var getOrgs = function(authOrgUrl) {
         //returns array of org objects
         return new Promise(function(resolve, reject) {
@@ -48,34 +53,112 @@ $('document').ready(function() {
           }
         })});
       };
+      // getOrgs(authOrgUrl).then(function(output) {
+      //   console.log(output);
+      // });
       getMembers = function(orgName) {
-          $.ajax({
-          url: apiUrl+'/orgs'+orgName+'/members',
-          type: 'GET',
-          // data: {'sort': 'updated', 'per_page': 10},
-          success: function(result) {
-
-            return resolve(result);
-          }
-        })});
-      }
-      getOrgs(authOrgUrl).then(function(output) {
-        console.log(output);
-      })
-      //get array of repo objects from github
-      var getRepos = function (authRepoUrl){
+        // returns array of user objects
         return new Promise(function(resolve, reject) {
           $.ajax({
-          url: authRepoUrl,
-          type: 'GET',
-          data: {'sort': 'updated', 'per_page': 10},
-          success: function(result) {
-            return resolve(result);
-          }
-        })});
+            url: apiUrl+'/orgs/'+orgName+'/members',
+            type: 'GET',
+            // data: {'sort': 'updated', 'per_page': 10},
+            success: function(result) {
+              return resolve(result);
+            }
+          });
+        });
       };
 
-      // var getReposCommits = function(repos) {
+      var getRepos = function (authRepoUrl){
+        //get array of repo objects from github
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+            url: authRepoUrl,
+            type: 'GET',
+            data: {'sort': 'updated', 'per_page': 3}, ///CHANGE RESULTS NUMBER
+            success: function(result) {
+              return resolve(result);
+            }
+          });
+        });
+      };
+      
+      var getReposLanguages = function(repos) {
+        // this is for authenticated users
+        return Promise.all(repos.map(function(repo) {
+          return $.ajax({
+            url: repo.languages_url+tokenUrl,
+            type: 'GET'
+          })
+        })).then(function(languages) {
+          for(var i = 0; i<repos.length; i++) {
+            repos[i].languages = languages[i];
+          };
+          return repos;
+        })
+      };
+
+      var getMembersRepos = function(members) {
+        for(var i=0; i<members.length; i++) {
+          var member = members[i];
+          var reposUrl = member.repos_url;
+          getRepos(reposUrl)
+          .then(getReposLanguages)
+          // .then(processRepos)
+          .then(function(output){
+            console.log(output);
+          });
+        }
+      }; 
+
+      getMembers('hackreactor').then(getMembersRepos);
+      // var getMembersRepos = function(members) {
+      //   return Promise.all(members.map(function(member) {
+      //     var reposUrl = members.repos_url;
+      //     $.ajax({
+      //       url: reposUrl,
+      //       type: 'GET',
+      //       data: {'sort': 'updated', 'per_page': 10},
+      //       success: function(result) {
+      //         return resolve(result);
+      //       }
+      //     });
+      //   }));
+      // };
+
+      
+      //  var getMembersRepos = function(members) {
+      //   return Promise.all(members.map(function(member) {
+      //     var reposUrl = members.repos_url;
+      //     $.ajax({
+      //       url: reposUrl,
+      //       type: 'GET',
+      //       data: {'sort': 'updated', 'per_page': 3},
+      //       success: function(result) {
+      //         return resolve(result);
+      //       }
+      //     });
+      //   }));
+      // };
+      
+
+      // var getReposLanguages = function(repos) {
+      //   // this is for authenticated users
+      //   return Promise.all(repos.map(function(repo) {
+      //     return $.ajax({
+      //       url: repo.languages_url+tokenUrl,
+      //       type: 'GET'
+      //     })
+      //   })).then(function(languages) {
+      //     for(var i = 0; i<repos.length; i++) {
+      //       repos[i].languages = languages[i];
+      //     };
+      //     return repos;
+      //   })
+      // };
+
+          // var getReposCommits = function(repos) {
       //   // /repos/:owner/:repo/stats/contributors
       //   var owner = repo.owner.login;
       //   var repoName = repo.name;
@@ -89,19 +172,8 @@ $('document').ready(function() {
       //     }
       //   })
       // };
-      var getReposLanguages = function(repos) {
-        return Promise.all(repos.map(function(repo) {
-          return $.ajax({
-            url: repo.languages_url+tokenUrl,
-            type: 'GET'
-          })
-        })).then(function(languages) {
-          for(var i = 0; i<repos.length; i++) {
-            repos[i].languages = languages[i];
-          };
-          return repos;
-        })
-      };
+
+
       // get the bytes of code of the languages in each repo
       // var getReposLanguages = function(repos) {
       //   return Promise.all(repos.map(function(repo) {
@@ -214,97 +286,10 @@ $('document').ready(function() {
     //   }
 
     //   getRepos(authRepoUrl).then(getReposLanguages).then(processRepos);
-      
-    //   //create and diaplay new repo
-    //   var createRepo = function(authRepoUrl) {
-    //     //POST new repo to github
-    //     var postRepo = function(repoName) {
-    //       return $$.ajax({
-    //         url: authRepoUrl,
-    //         type: 'POST',
-    //         data:{'name': repoName}
-    //       })
-    //     };
+    
 
-    //     //display new repo
-    //     var renderRepo = function(repo) {
-    //        //format html.
-    //       var output = '<div class="col-md-2">';
-    //       output += '<div class="panel panel-default">';
-    //       output += '<div class="panel-heading">';
-    //       output += '<label class="btn btn-primary"> <input type="checkbox" id=' + repo.name + '></label> ';//checkbox
-    //       output += '<a href=' + repo.html_url + ' target="_blank" class="'+repo.name+'">' + repo.name + '</a>';
-    //       output += '</div>'
 
-    //       output += '<div class="panel-body">';
 
-    //       output += '</div>';
-    //       output += '</div>';
-    //       output += '</div>';
-
-    //       $$('.repos').prepend(output);
-    //     };
-        
-    //     $$('.create').on('click', function() {
-    //       event.preventDefault();
-    //       var repoName = $$('.repoName').val();
-    //       postRepo(repoName).then(renderRepo)
-    //     }); 
-    //   }(authRepoUrl);
-    //   //when create button is clicked, create a new repo and display it
-          
-    //   //add new collaborator to repo(s) and display user's gravatar    
-    //   var collaborator = function() {  
-    //     //add collaborator to repo(s)
-    //     var addCollaborator = function(userAdded, repo) { 
-    //       var postUser = function(userAdded, repo) {
-    //         $$.ajax({
-    //           url: userUrl,
-    //           type: 'GET',
-    //           success: function(user) {
-    //             var addUserUrl = apiUrl + '/repos/' + user.login + '/' + repo + '/collaborators/' + userAdded + tokenUrl;
-    //             $$.ajax({
-    //               url: addUserUrl,
-    //               type: 'PUT',
-    //               success: function(response) {
-    //                 getGravatar(userAdded);
-    //               }
-    //             });
-    //           }
-    //         });
-    //       }(userAdded, repo);
-
-    //       //get new collaborator's gravatar from github
-    //       var getGravatar = function(userAdded) {
-    //         var displayGravatar = function(userAdded) {
-    //           var content = '<img src=' + userAdded.avatar_url + ' class="img-responsive img-circle" alt="user added">';
-    //           var oldImg = $$('#' + repo).parent().parent().children('img');
-    //           if(oldImg[0]){ oldImg.hide() };
-    //           $$('.' + repo).after('<img src=' + userAdded.avatar_url + ' class="img-responsive img-circle" alt="user added">');  
-    //         };
-    //         $$.ajax({
-    //           url: apiUrl + '/users/' + userAdded,
-    //           type: 'GET',
-    //           success: displayGravatar
-    //         });  
-    //       };
-    //     };
-
-    //     //when add button is clicked, add new user to repos
-    //     $$('.add').on('click', function () {
-    //       event.preventDefault();
-    //       var repos = $$("input[type=checkbox]:checked");
-    //       console.log(repos);
-    //       if (repos.length == 0) {
-    //         $$('.error').hide();
-    //         $$('#userName').append('<div class="error">check the repos to which you want to add a collaborator</div>');
-    //       } else {
-    //         for (var i = 0; i < repos.length; i++) {
-    //           $$('.error').hide();
-    //           addCollaborator($$('.userName').val(), repos[i].id);
-    //         }
-    //       };
-    //     });
-    //   }();
+ 
 
 

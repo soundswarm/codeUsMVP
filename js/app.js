@@ -31,7 +31,6 @@ $('document').ready(function() {
       var userUrl = apiUrl+'/user'+tokenUrl;
       var authRepoUrl = apiUrl+'/user/repos'+tokenUrl;
       var authOrgUrl = apiUrl+'/user/orgs'+tokenUrl;
-      console.log(tokenUrl)
       // var authAddUserUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
       // var authCommitsUrl = apiUrl+'/user/match/collaborators'+tokenUrl;
 
@@ -100,8 +99,10 @@ $('document').ready(function() {
       };
 
       //process and display information about repos
-    var processRepos = function(repos, memberName, gravatarUrl) {
-      console.log(memberName, gravatarUrl )
+    var processRepos = function(repos) {
+      console.log(repos, memberName, gravatarUrl );
+      var memberName = repos[0].owner.login;
+      var gravatarUrl = repos[0].owner.avatar_url;
       //turn object into array then sort array
       var sortObject = function(object) {
         var array = [];
@@ -129,10 +130,12 @@ $('document').ready(function() {
         var displaySizes = function(totals) {
           var reposLanguages = sortObject(totals);
           var output = '<ul class="list-group totalLanguages"> ';
-          // output += '<div class=username>'+
+          output += '<div class=username>'+memberName;
+          output += '<img src='+gravatarUrl+'class="img-responsive img-circle" alt="user added">'
           for(var i in reposLanguages) {
             output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
+          output+='</div>';
           output+='</ul>';
           $('.reposLanguages').append(output);
         };

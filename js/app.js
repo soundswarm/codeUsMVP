@@ -10,14 +10,15 @@ $('document').ready(function() {
       doEverything();
     } else {
         //display sign in form
-        $('#createRepo, #addUser, #listRepos, #languages').hide();
+        $('#languages').hide();
         $('.signIn').on('click', doEverything);
     }  
   })();
 
   //after login
   function doEverything() {
-    OAuth.popup('github', {cache: true}, function (error, result) {
+    OAuth.popup('github', {cache: true})
+    .done(function (result) {
 
       //console.log(error);
 
@@ -66,7 +67,7 @@ $('document').ready(function() {
       getOrgs(authOrgUrl).then(displayOrgs);
 
 
-
+// cCHANGE NUM OF USERS RETRIEVED
       getOrgs(authOrgUrl).then(function(output) {
         console.log(output);
       });
@@ -76,7 +77,7 @@ $('document').ready(function() {
           $.ajax({
             url: apiUrl+'/orgs/'+orgName+'/members'+tokenUrl,
             type: 'GET',
-            data: {'per_page': 100},
+            data: {'per_page': 5},
             success: function(result) {
               return resolve(result);
             }

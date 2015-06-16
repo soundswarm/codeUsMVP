@@ -10,7 +10,7 @@ $('document').ready(function() {
       doEverything();
     } else {
         //display sign in form
-        $('#languages, #filterForm').hide();
+        $('#languages, #filterForm', '#organizations').hide();
         $('.signIn').on('click', doEverything);
     }  
   })();
@@ -20,10 +20,7 @@ $('document').ready(function() {
     OAuth.popup('github', {cache: true})
     .done(function (result) {
       console.log(result);
-      //console.log(error);
-
       $('.signIn, #filterForm, #languages').hide();
-        
 
       //urls used in API calls. 
       var apiUrl = "https://api.github.com";
@@ -64,6 +61,18 @@ $('document').ready(function() {
           //get org members then display them
 
           getMembers($(this).text()).then(getMembersRepos);
+          $('input').keyup(function(event){
+            event.preventDefault();
+            var input = $(this).val();
+
+            $('.member').children('.totalLanguages').children('.language:contains("CSS")');
+            $('.member').filter(function(index){
+              var target = $('.member .totalLanguages li .language').text();
+              // var target = $(this).children('.totalLanguages').children('.language:contains("CSS")')
+              console.log(target.length);
+              return target==='CSS';
+            }).hide();
+          });
         })
 
       }
@@ -80,7 +89,7 @@ $('document').ready(function() {
           $.ajax({
             url: apiUrl+'/orgs/'+orgName+'/members'+tokenUrl,
             type: 'GET',
-            data: {'per_page': 5},
+            data: {'per_page': 2},
             success: function(result) {
               return resolve(result);
             }
@@ -94,7 +103,7 @@ $('document').ready(function() {
           $.ajax({
             url: authRepoUrl,
             type: 'GET',
-            data: {'sort': 'updated', 'per_page': 5}, ///CHANGE RESULTS NUMBER
+            data: {'sort': 'updated', 'per_page': 2}, ///CHANGE RESULTS NUMBER
             success: function(result) {
               return resolve(result);
             }
@@ -151,12 +160,12 @@ $('document').ready(function() {
           var memberUrl = repos[0].owner.html_url;
           console.log(repos[0]);
           var reposLanguages = sortObject(totals);
-          var output = '<div "list-group-item">';
+          var output = '<div class="list-group-item member">';
           output+= '<ul class="list-group totalLanguages"> ';
           output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">';
           output += '<div class=username>'+'<a target="_blank" href="'+memberUrl+'">'+memberName+'</a></div>';
           for(var i in reposLanguages) {
-            output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
+            output += '<li class="list-group-item">'+'<span class="language">'+reposLanguages[i][0]+'</span>'+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
           output+='</ul>';
           output+='</div>';

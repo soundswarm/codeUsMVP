@@ -101,7 +101,7 @@ $('document').ready(function() {
 
       //process and display information about repos
     var processRepos = function(repos) {
-
+      console.log(repos)
       //turn object into array then sort array
       var sortObject = function(object) {
         var array = [];
@@ -129,6 +129,7 @@ $('document').ready(function() {
         var displaySizes = function(totals) {
           var reposLanguages = sortObject(totals);
           var output = '<ul class="list-group totalLanguages"> ';
+          // output += '<div class=username>'+
           for(var i in reposLanguages) {
             output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
@@ -139,57 +140,17 @@ $('document').ready(function() {
         displaySizes(totals);
       }(repos); 
 
-      //format the repos into panels and display them
-      var parseRepo = function(repo){
-        
-        //display formatted repo html on the page
-        var render = function(htmlString) {
-          $('.repos').append(htmlString);
-        };
 
-        //count total bytes of code for languages in each repo. Argument is github object of languages
-        var repoBytes = function(repoLangs) {
-          var totalBytes=0;
-          for(key in repoLangs) {
-            //console.log(repoLangs[key]);
-            totalBytes += repoLangs[key];
-          };
-          return totalBytes;
-        };
-        
-        //format html.
-        var output = '<div class="col-md-2">';
-        output += '<div class="panel panel-default">';
-        output += '<div class="panel-heading">';
-        output += '<label class="btn btn-primary"> <input type="checkbox" id=' + repo.name + '></label> ';//checkbox
-        output += '<a href=' + repo.html_url + ' target="_blank" class="'+repo.name+'">' + repo.name + '</a>';
-        output += '</div>'
-
-        output += '<div class="panel-body">';
-        output += '<ul class="list-group languages">';        
-        
-        //calculate the languages' percentage of it's repo's total byte size
-        var langArray = sortObject(repo.languages);
-        for (var i =0;i< langArray.length ;i++) {
-          var languagePercentage = Math.round(langArray[i][1]/repoBytes(repo.languages)*100)
-          output += '<li class="list-group-item language">' + langArray[i][0] + ':  ' + '<span class="badge">'+languagePercentage+'%'+'</span>' + '</li>'; 
-        };
-        output += '</ul>';
-        output += '</div>';
-        output += '</div>';
-        output += '</div>';
-
-        //display formatted html
-        render(output);
-      };
-
-      repos.forEach(parseRepo);
+      // repos.forEach(parseRepo);
     };
 
       var getMembersRepos = function(members) {
         for(var i=0; i<members.length; i++) {
           var member = members[i];
+          var gravatarUrl = member.avatar_url;
+          var memberName = member.login;
           var reposUrl = member.repos_url;
+          console.log(gravatarUrl, memberName)
           getRepos(reposUrl)
           .then(getReposLanguages)
           .then(processRepos)

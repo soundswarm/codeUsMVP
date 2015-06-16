@@ -151,13 +151,15 @@ $('document').ready(function() {
           var memberUrl = repos[0].owner.html_url;
           console.log(repos[0]);
           var reposLanguages = sortObject(totals);
-          var output = '<ul class="list-group totalLanguages"> ';
-          output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">'
+          var output = '<div "list-group-item">';
+          output+= '<ul class="list-group totalLanguages"> ';
+          output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">';
           output += '<div class=username>'+'<a target="_blank" href="'+memberUrl+'">'+memberName+'</a></div>';
           for(var i in reposLanguages) {
             output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
           output+='</ul>';
+          output+='</div>';
           $('.reposLanguages').append(output);
         };
         var totals = sizes(repos);

@@ -59,8 +59,8 @@ $('document').ready(function() {
         $('#organizations').append(output);
         $('.organization').on('click', function(e) {
           e.preventDefault();
-          $('#languages').show();   
-          console.log($(this).text())
+          $('#languages, #filterForm').show();   
+          
           //get org members then display them
 
           getMembers($(this).text()).then(getMembersRepos);
@@ -119,8 +119,8 @@ $('document').ready(function() {
 
       //process and display information about repos
     var processRepos = function(repos) {
-      var memberName = repos[0].owner.login;
-      var gravatarUrl = repos[0].owner.avatar_url+tokenUrl;
+      console.log()
+      
       //turn object into array then sort array
       var sortObject = function(object) {
         var array = [];
@@ -146,10 +146,14 @@ $('document').ready(function() {
         
         //display bytes of code for the languages in all repos
         var displaySizes = function(totals) {
+          var memberName = repos[0].owner.login;
+          var gravatarUrl = repos[0].owner.avatar_url+tokenUrl;
+          var memberUrl = repos[0].owner.html_url;
+          console.log(repos[0]);
           var reposLanguages = sortObject(totals);
           var output = '<ul class="list-group totalLanguages"> ';
           output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">'
-          output += '<span class=username>'+memberName+'</span>';
+          output += '<div class=username>'+'<a target="_blank" href="'+memberUrl+'">'+memberName+'</a></div>';
           for(var i in reposLanguages) {
             output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
@@ -164,6 +168,7 @@ $('document').ready(function() {
       var getMembersRepos = function(members) {
         for(var i=0; i<members.length; i++) {
           var member = members[i];
+          console.log(member);
           var reposUrl = member.repos_url+tokenUrl;
           getRepos(reposUrl)
           .then(getReposLanguages)

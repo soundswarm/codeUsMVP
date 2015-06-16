@@ -61,20 +61,19 @@ $('document').ready(function() {
           //get org members then display them
 
           getMembers($(this).text()).then(getMembersRepos);
-          $('input').keyup(function(event){
+          $('button').click(function(event){
             event.preventDefault();
-            var input = $(this).val();
-
-            $('.member').children('.totalLanguages').children('.language:contains("CSS")');
-            $('.member').filter(function(index){
-              var target = $('.member .totalLanguages li .language').text();
-              // var target = $(this).children('.totalLanguages').children('.language:contains("CSS")')
-              console.log(target.length);
-              return target==='CSS';
-            }).hide();
+            var input = $('input').val().toUpperCase();
+            console.log(input)
+            $('.member:not(:contains("'+input+'"))').hide()
           });
+          $('input').keyup(function(event){
+            $('.member').show();
+            event.preventDefault();
+            var input = $(this).val().toUpperCase();
+            $('.member:not(:contains("'+input+'"))').hide()
+          });          
         })
-
       }
       getOrgs(authOrgUrl).then(displayOrgs);
 
@@ -165,7 +164,7 @@ $('document').ready(function() {
           output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">';
           output += '<div class=username>'+'<a target="_blank" href="'+memberUrl+'">'+memberName+'</a></div>';
           for(var i in reposLanguages) {
-            output += '<li class="list-group-item">'+'<span class="language">'+reposLanguages[i][0]+'</span>'+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
+            output += '<li class="list-group-item">'+'<span class="language">'+reposLanguages[i][0].toUpperCase()+'</span>'+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
           output+='</ul>';
           output+='</div>';

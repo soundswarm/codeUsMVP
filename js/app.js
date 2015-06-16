@@ -22,8 +22,8 @@ $('document').ready(function() {
       console.log(result);
       //console.log(error);
 
-      $('.signIn, #filterForm').hide();
-      $('#languages').show();     
+      $('.signIn, #filterForm, #languages').hide();
+        
 
       //urls used in API calls. 
       var apiUrl = "https://api.github.com";
@@ -53,12 +53,13 @@ $('document').ready(function() {
         // var html = '<ul>';
         var html='';
         var output = orgs.map(function(org) {
-          return html += '<li class="organization">' + org.login + '</li>';
+          return html += '<li class="list-group-item organization">' + org.login + '</li>';
         });
 
         $('#organizations').append(output);
         $('.organization').on('click', function(e) {
           e.preventDefault();
+          $('#languages').show();   
           console.log($(this).text())
           //get org members then display them
 
@@ -148,11 +149,10 @@ $('document').ready(function() {
           var reposLanguages = sortObject(totals);
           var output = '<ul class="list-group totalLanguages"> ';
           output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">'
-          output += '<span class=username>'+memberName;
+          output += '<span class=username>'+memberName+'</span>';
           for(var i in reposLanguages) {
             output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
-          output+='</span>';
           output+='</ul>';
           $('.reposLanguages').append(output);
         };

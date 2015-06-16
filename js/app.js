@@ -100,8 +100,8 @@ $('document').ready(function() {
       };
 
       //process and display information about repos
-    var processRepos = function(repos) {
-      console.log(repos)
+    var processRepos = function(repos, memberName, gravatarUrl) {
+      console.log(memberName, gravatarUrl )
       //turn object into array then sort array
       var sortObject = function(object) {
         var array = [];
@@ -153,7 +153,9 @@ $('document').ready(function() {
           console.log(gravatarUrl, memberName)
           getRepos(reposUrl)
           .then(getReposLanguages)
-          .then(processRepos)
+          .then(function(repos){
+            processRepos(repos, memberName, gravatarUrl);
+          })
           // .then(function(output){
           //   console.log(output);
           // });

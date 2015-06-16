@@ -59,7 +59,7 @@ $('document').ready(function() {
         // returns array of user objects
         return new Promise(function(resolve, reject) {
           $.ajax({
-            url: apiUrl+'/orgs/'+orgName+'/members',
+            url: apiUrl+'/orgs/'+orgName+'/members'+tokenUrl,
             type: 'GET',
             // data: {'sort': 'updated', 'per_page': 10},
             success: function(result) {
@@ -75,7 +75,7 @@ $('document').ready(function() {
           $.ajax({
             url: authRepoUrl,
             type: 'GET',
-            data: {'sort': 'updated', 'per_page': 3}, ///CHANGE RESULTS NUMBER
+            data: {'sort': 'updated', 'per_page': 100}, ///CHANGE RESULTS NUMBER
             success: function(result) {
               return resolve(result);
             }
@@ -102,7 +102,7 @@ $('document').ready(function() {
     var processRepos = function(repos) {
       console.log(repos, memberName, gravatarUrl );
       var memberName = repos[0].owner.login;
-      var gravatarUrl = repos[0].owner.avatar_url;
+      var gravatarUrl = repos[0].owner.avatar_url+tokenUrl;
       //turn object into array then sort array
       var sortObject = function(object) {
         var array = [];
@@ -130,12 +130,12 @@ $('document').ready(function() {
         var displaySizes = function(totals) {
           var reposLanguages = sortObject(totals);
           var output = '<ul class="list-group totalLanguages"> ';
-          output += '<div class=username>'+memberName;
-          output += '<img src='+gravatarUrl+'class="img-responsive img-circle" alt="user added">'
+          output += '<img src='+gravatarUrl+' class="img-responsive img-circle" alt="user added">'
+          output += '<span class=username>'+memberName;
           for(var i in reposLanguages) {
             output += '<li class="list-group-item">'+reposLanguages[i][0]+':'+'<span class="badge">'+Math.round(reposLanguages[i][1]/1000)+'</span>'+'</li>';
           };
-          output+='</div>';
+          output+='</span>';
           output+='</ul>';
           $('.reposLanguages').append(output);
         };
@@ -150,15 +150,10 @@ $('document').ready(function() {
       var getMembersRepos = function(members) {
         for(var i=0; i<members.length; i++) {
           var member = members[i];
-          var gravatarUrl = member.avatar_url;
-          var memberName = member.login;
-          var reposUrl = member.repos_url;
-          console.log(gravatarUrl, memberName)
+          var reposUrl = member.repos_url+tokenUrl;
           getRepos(reposUrl)
           .then(getReposLanguages)
-          .then(function(repos){
-            processRepos(repos, memberName, gravatarUrl);
-          })
+          .then(processRepos)
           // .then(function(output){
           //   console.log(output);
           // });

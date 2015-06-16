@@ -1,5 +1,8 @@
 body {
   margin-left: 10px;
+  background-image: url(eduhackathon.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .error {

@@ -10,7 +10,7 @@ $('document').ready(function() {
       doEverything();
     } else {
         //display sign in form
-        $('#languages').hide();
+        $('#languages, #filterForm').hide();
         $('.signIn').on('click', doEverything);
     }  
   })();
@@ -22,8 +22,8 @@ $('document').ready(function() {
       console.log(result);
       //console.log(error);
 
-      $('.signIn').hide();
-      $('#createRepo, #addUser, #listRepos, #languages').show();     
+      $('.signIn, #filterForm').hide();
+      $('#languages').show();     
 
       //urls used in API calls. 
       var apiUrl = "https://api.github.com";
@@ -60,6 +60,8 @@ $('document').ready(function() {
         $('.organization').on('click', function(e) {
           e.preventDefault();
           console.log($(this).text())
+          //get org members then display them
+
           getMembers($(this).text()).then(getMembersRepos);
         })
 
@@ -77,7 +79,7 @@ $('document').ready(function() {
           $.ajax({
             url: apiUrl+'/orgs/'+orgName+'/members'+tokenUrl,
             type: 'GET',
-            data: {'per_page': 100},
+            data: {'per_page': 5},
             success: function(result) {
               return resolve(result);
             }
@@ -91,7 +93,7 @@ $('document').ready(function() {
           $.ajax({
             url: authRepoUrl,
             type: 'GET',
-            data: {'sort': 'updated', 'per_page': 100}, ///CHANGE RESULTS NUMBER
+            data: {'sort': 'updated', 'per_page': 5}, ///CHANGE RESULTS NUMBER
             success: function(result) {
               return resolve(result);
             }

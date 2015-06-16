@@ -19,7 +19,7 @@ $('document').ready(function() {
   function doEverything() {
     OAuth.popup('github', {cache: true})
     .done(function (result) {
-
+      console.log(result);
       //console.log(error);
 
       $('.signIn').hide();

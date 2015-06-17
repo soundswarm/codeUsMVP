@@ -21,6 +21,7 @@ $('document').ready(function() {
     OAuth.popup('github', {cache: true})
     .done(function (result) {
       console.log(result);
+      $('body').css('background-image', 'none');
       $('#organizations').show()
       $('.signIn, #filterForm, #languages').hide();
 

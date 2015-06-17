@@ -1,8 +1,8 @@
 body {
   margin-left: 10px;
-/*  background-image: url(eduhackathon.jpg);
-  background-size: 100%;
-  background-repeat: no-repeat;*/
+  background-image: url(Hackathon.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .error {
@@ -47,6 +47,7 @@ body {
   margin-right: auto;
   margin-bottom: auto;
   text-align: center;
+  color:  white;
 }
 .button-block, .signIn {
   width: 200px;

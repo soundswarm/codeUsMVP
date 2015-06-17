@@ -82,7 +82,6 @@ $('document').ready(function() {
 
 // cCHANGE NUM OF USERS RETRIEVED
       getOrgs(authOrgUrl).then(function(output) {
-        console.log(output);
       });
       getMembers = function(orgName) {
         // returns array of user objects
@@ -129,7 +128,6 @@ $('document').ready(function() {
 
       //process and display information about repos
     var processRepos = function(repos) {
-      console.log()
       
       //turn object into array then sort array
       var sortObject = function(object) {
@@ -159,7 +157,6 @@ $('document').ready(function() {
           var memberName = repos[0].owner.login;
           var gravatarUrl = repos[0].owner.avatar_url+tokenUrl;
           var memberUrl = repos[0].owner.html_url;
-          console.log(repos[0]);
           var reposLanguages = sortObject(totals);
           var output = '<div class="list-group-item member">';
           output+= '<ul class="list-group totalLanguages"> ';
@@ -180,7 +177,6 @@ $('document').ready(function() {
       var getMembersRepos = function(members) {
         for(var i=0; i<members.length; i++) {
           var member = members[i];
-          console.log(member);
           var reposUrl = member.repos_url+tokenUrl;
           getRepos(reposUrl)
           .then(getReposLanguages)

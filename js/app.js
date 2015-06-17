@@ -90,7 +90,7 @@ $('document').ready(function() {
           $.ajax({
             url: apiUrl+'/orgs/'+orgName+'/members'+tokenUrl,
             type: 'GET',
-            data: {'per_page': 5},
+            data: {'per_page': 200},
             success: function(result) {
               return resolve(result);
             }
@@ -104,7 +104,7 @@ $('document').ready(function() {
           $.ajax({
             url: authRepoUrl,
             type: 'GET',
-            data: {'sort': 'updated', 'per_page': 5}, ///CHANGE RESULTS NUMBER
+            data: {'sort': 'updated', 'per_page': 20}, ///CHANGE RESULTS NUMBER
             success: function(result) {
               return resolve(result);
             }

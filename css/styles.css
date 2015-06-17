@@ -24,6 +24,10 @@ body {
   padding: 1px;
   border: none;
 }
+.member {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
 .organization {
   font-size: 30px;
 }

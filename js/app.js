@@ -10,16 +10,18 @@ $('document').ready(function() {
       doEverything();
     } else {
         //display sign in form
-        $('#languages, #filterForm', '#organizations').hide();
-        $('.signIn').on('click', doEverything);
+        $('#languages, #filterForm, #organizations').hide();
+        $('.signIn').on('click',doEverything);
     }  
   })();
 
   //after login
   function doEverything() {
+   
     OAuth.popup('github', {cache: true})
     .done(function (result) {
       console.log(result);
+      $('#organizations').show()
       $('.signIn, #filterForm, #languages').hide();
 
       //urls used in API calls. 
@@ -88,7 +90,7 @@ $('document').ready(function() {
           $.ajax({
             url: apiUrl+'/orgs/'+orgName+'/members'+tokenUrl,
             type: 'GET',
-            data: {'per_page': 2},
+            data: {'per_page': 5},
             success: function(result) {
               return resolve(result);
             }
@@ -102,7 +104,7 @@ $('document').ready(function() {
           $.ajax({
             url: authRepoUrl,
             type: 'GET',
-            data: {'sort': 'updated', 'per_page': 2}, ///CHANGE RESULTS NUMBER
+            data: {'sort': 'updated', 'per_page': 5}, ///CHANGE RESULTS NUMBER
             success: function(result) {
               return resolve(result);
             }
